@@ -1,0 +1,57 @@
+```yaml
+method:
+  behavior_type: mutation
+  parameters:
+    - id1
+    - id2
+  entities_read:
+    - user(id1)
+    - user(id2)
+    - following_relation(id1, id2)
+  normal_conditions:
+    - user(id1) exists
+    - user(id2) exists
+    - id1 != id2
+    - id1 does not follow id2
+  derived_values: []
+  state_changes:
+    - user(id1) following list includes user(id2)
+    - user(id2) followers list includes user(id1)
+    - output_sequence contains "follow_user succeeded"
+  conditional_state_changes: []
+  unchanged_state:
+    - all users other than id1 and id2
+    - all videos
+    - all received-video queues for all users
+    - user(id1) basic attributes (name, age, ID)
+    - user(id2) basic attributes (name, age, ID)
+  return_constraints:
+    - method returns void
+  exceptions:
+    - name: UserIdNotFoundException
+      condition: user(id1) does not exist
+      priority: 1
+    - name: UserIdNotFoundException
+      condition: user(id1) exists AND user(id2) does not exist
+      priority: 2
+    - name: SelfSubscriptionException
+      condition: user(id1) exists AND user(id2) exists AND id1 == id2
+      priority: 3
+    - name: DuplicateSubscriptionException
+      condition: user(id1) exists AND user(id2) exists AND id1 != id2 AND id1 already follows id2
+      priority: 4
+  atomicity_requirements:
+    - No partial following relation may be established in any exceptional branch
+    - No other business state modification may occur in any exceptional branch
+    - Success must establish both directions of the relation atomically
+  ordering:
+    - Exception check order: id1 existence, id2 existence, self-follow, duplicate relation
+  scope_constraints:
+    - Only affects the following and follower relations between id1 and id2
+  missing_information:
+    - None
+  ambiguities:
+    - None
+  unsupported_assumptions:
+    - None
+```

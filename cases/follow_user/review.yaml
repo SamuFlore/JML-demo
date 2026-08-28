@@ -1,0 +1,17 @@
+verdict: PASS
+summary: >-
+  The specification covers the normal relation transaction, encodes all four priority branches as
+  disjoint conditions, prevents exceptional state mutation, and uses only supplied interface symbols.
+issues: []
+uncovered_requirements: []
+contradictory_clauses: []
+interface_hallucinations: []
+frame_condition_risks:
+  - The broad normal assignable users[*] relies on the course-specific safe semantics to protect
+    unrelated user fields and relations; tests must verify nested state explicitly.
+exception_priority_check: >-
+  PASS: id1 missing, id2 missing, self-follow, and duplicate relation are mutually exclusive in the
+  required priority order.
+pure_check: not applicable; this is a mutation
+recommended_patch_plan: []
+

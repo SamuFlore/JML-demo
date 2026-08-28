@@ -1,0 +1,25 @@
+{
+  "id": "hw9-follow-user-jml-fill",
+  "title": "用 JML 描述双向关注关系",
+  "interface": "NetworkInterface",
+  "method": "followUser",
+  "allowed_modes": ["hint", "review", "solution"],
+  "default_mode": "hint",
+  "samples": [
+    {"id": "correct", "label": "正确填写", "file": "samples/complete.jml"},
+    {"id": "missing-normal", "label": "错误：正常条件遗漏", "file": "samples/missing-normal-condition.jml"},
+    {"id": "wrong-direction", "label": "错误：关系方向颠倒", "file": "samples/wrong-relation-direction.jml"},
+    {"id": "overlap-exception", "label": "错误：异常条件重叠", "file": "samples/overlapping-exceptions.jml"},
+    {"id": "hallucinated-symbol", "label": "错误：使用不存在接口", "file": "samples/hallucinated-symbol.jml"},
+    {"id": "unfinished", "label": "错误：仍有空格", "file": "samples/incomplete.jml"}
+  ],
+  "placeholders": [
+    "NORMAL_CONDITION",
+    "FORWARD_POSTCONDITION",
+    "INVERSE_POSTCONDITION",
+    "FIRST_USER_MISSING",
+    "SECOND_USER_MISSING",
+    "SELF_FOLLOW",
+    "DUPLICATE_FOLLOW"
+  ]
+}

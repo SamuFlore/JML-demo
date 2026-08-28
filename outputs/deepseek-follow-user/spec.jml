@@ -1,0 +1,92 @@
+```markdown
+STATUS: FINAL_JML
+
+SPECIFICATION:
+```java
+public normal_behavior
+  requires containsUser(id1) && containsUser(id2) && id1 != id2 && !getUser(id1).isFollowing(getUser(id2));
+  assignable users[*], output;
+  ensures getUser(id1).isFollowing(getUser(id2));
+  ensures getUser(id2).containsFollower(getUser(id1));
+  ensures \old(getUser(id1).isFollowing(getUser(id2))) == false;
+  ensures \old(getUser(id2).containsFollower(getUser(id1))) == false;
+  ensures \num_of{int u; containsUser(u) && getUser(u).isFollowing(getUser(id1))} == 
+           \old(\num_of{int u; containsUser(u) && getUser(u).isFollowing(getUser(id1))}) + 1;
+  ensures \num_of{int u; containsUser(u) && getUser(u).isFollowing(getUser(id2))} == 
+           \old(\num_of{int u; containsUser(u) && getUser(u).isFollowing(getUser(id2))}) + 1;
+  ensures \num_of{int u; containsUser(u) && getUser(id1).isFollowing(getUser(u))} == 
+           \old(\num_of{int u; containsUser(u) && getUser(id1).isFollowing(getUser(u))}) + 1;
+  ensures \num_of{int u; containsUser(u) && getUser(id2).isFollowing(getUser(u))} == 
+           \old(\num_of{int u; containsUser(u) && getUser(id2).isFollowing(getUser(u))}) + 1;
+  ensures output.length == \old(output.length) + 1;
+  ensures output[output.length - 1] == "follow_user succeeded";
+  ensures (\forall int u; containsUser(u) && u != id1 && u != id2;
+            (\forall int v; containsUser(v); 
+              getUser(u).isFollowing(getUser(v)) <==> \old(getUser(u).isFollowing(getUser(v)))
+              && getUser(u).containsFollower(getUser(v)) <==> \old(getUser(u).containsFollower(getUser(v)))));
+  ensures (\forall int u; containsUser(u);
+            (\forall int v; containsUser(v) && v != id1 && v != id2;
+              getUser(u).isFollowing(getUser(v)) <==> \old(getUser(u).isFollowing(getUser(v)))
+              && getUser(u).containsFollower(getUser(v)) <==> \old(getUser(u).containsFollower(getUser(v)))));
+  ensures (\forall int u; containsUser(u); getUser(u).getName() == \old(getUser(u).getName()));
+  ensures (\forall int u; containsUser(u); getUser(u).getAge() == \old(getUser(u).getAge()));
+  ensures (\forall int u; containsUser(u); getUser(u).getId() == \old(getUser(u).getId()));
+
+also
+public exceptional_behavior
+  requires !containsUser(id1);
+  assignable \nothing;
+  signals_only UserIdNotFoundException;
+  signals (UserIdNotFoundException e) true;
+
+also
+public exceptional_behavior
+  requires containsUser(id1) && !containsUser(id2);
+  assignable \nothing;
+  signals_only UserIdNotFoundException;
+  signals (UserIdNotFoundException e) true;
+
+also
+public exceptional_behavior
+  requires containsUser(id1) && containsUser(id2) && id1 == id2;
+  assignable \nothing;
+  signals_only SelfSubscriptionException;
+  signals (SelfSubscriptionException e) true;
+
+also
+public exceptional_behavior
+  requires containsUser(id1) && containsUser(id2) && id1 != id2 && getUser(id1).isFollowing(getUser(id2));
+  assignable \nothing;
+  signals_only DuplicateSubscriptionException;
+  signals (DuplicateSubscriptionException e) true;
+```
+
+ABSTRACT_HELPERS:
+MISSING_INTERFACE_SYMBOLS:
+- The exact method name for the output sequence is not provided; `output` is assumed as a conceptual sequence with `.length` and index access. If the actual interface provides a different mechanism, this must be adjusted.
+
+REQUIREMENT_TO_CLAUSE_MAP:
+- requirement: 用户 `id1` 存在、用户 `id2` 存在、二者不是同一用户，且 `id1` 当前没有关注 `id2` 为成功前置条件
+  generated_clause: `requires containsUser(id1) && containsUser(id2) && id1 != id2 && !getUser(id1).isFollowing(getUser(id2))` (normal_behavior)
+- requirement: 成功后，`id1` 的关注列表包含 `id2`，同时 `id2` 的粉丝列表包含 `id1`
+  generated_clause: `ensures getUser(id1).isFollowing(getUser(id2))` and `ensures getUser(id2).containsFollower(getUser(id1))` (normal_behavior)
+- requirement: 输出 `follow_user succeeded`
+  generated_clause: `ensures output[output.length - 1] == "follow_user succeeded"` and `ensures output.length == \old(output.length) + 1` (normal_behavior)
+- requirement: 除这两个方向的关系变化外，其他用户、视频、接收视频队列以及用户基本属性均不得改变
+  generated_clause: `ensures (\forall int u; containsUser(u) && u != id1 && u != id2; ...)` and `ensures (\forall int u; containsUser(u); getUser(u).getName() == \old(getUser(u).getName()))` etc. (normal_behavior)
+- requirement: `id1` 不存在时抛出 `UserIdNotFoundException`
+  generated_clause: `signals (UserIdNotFoundException e) true` under `requires !containsUser(id1)` (exceptional_behavior, branch 1)
+- requirement: `id1` 存在但 `id2` 不存在时抛出 `UserIdNotFoundException`
+  generated_clause: `signals (UserIdNotFoundException e) true` under `requires containsUser(id1) && !containsUser(id2)` (exceptional_behavior, branch 2)
+- requirement: `id1 == id2` 时抛出 `SelfSubscriptionException`
+  generated_clause: `signals (SelfSubscriptionException e) true` under `requires containsUser(id1) && containsUser(id2) && id1 == id2` (exceptional_behavior, branch 3)
+- requirement: 关注关系已经存在时抛出 `DuplicateSubscriptionException`
+  generated_clause: `signals (DuplicateSubscriptionException e) true` under `requires containsUser(id1) && containsUser(id2) && id1 != id2 && getUser(id1).isFollowing(getUser(id2))` (exceptional_behavior, branch 4)
+- requirement: 任何异常分支均不得建立部分关注关系或产生其他业务状态修改
+  generated_clause: `assignable \nothing` for all exceptional_behavior branches
+
+NOTES:
+- The `assignable` clause for the normal behavior uses `users[*]` to match the official interface grounding, but frame-condition ensures explicitly state that only the relations between `id1` and `id2` change. If a more precise frame is available from the interface (e.g., only the two user objects), it should be used.
+- The normal behavior ensures quantify over following/follower sets to capture the exact one-increment. This ensures no double-counting and no additional changes.
+- For video and received-video queues, the interface does not expose direct methods to verify them. The specification assumes these are covered by the generic quantification over users and attributes; if explicit video/queue accessor methods exist, additional ensures should be added.
+```

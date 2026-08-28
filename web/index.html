@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HW9 · JML 规格学习助手</title>
+  <meta name="description" content="从自然语言需求出发，填写 JML，并获得分级反馈。">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="mark">J</span><span>HW9 规格学习助手</span></div>
+    <div class="status"><span class="dot"></span><span id="method-name">正在载入题目</span></div>
+  </header>
+
+  <main class="workspace">
+    <section class="panel brief-panel">
+      <div class="panel-heading"><span class="eyebrow">01 · READ</span><h1 id="exercise-title">JML 填空练习</h1></div>
+      <article id="requirement" class="prose"></article>
+      <div class="guide-card">
+        <strong>解题顺序</strong>
+        <ol><li>列出成功所需条件</li><li>确定成功后的可观察状态</li><li>按优先级排除异常重叠</li></ol>
+      </div>
+    </section>
+
+    <section class="panel editor-panel">
+      <div class="panel-heading editor-heading">
+        <div><span class="eyebrow">02 · WRITE</span><h2>填写规格</h2></div>
+        <div class="heading-actions">
+          <select id="sample-select" aria-label="载入演示样例"><option value="">载入演示样例…</option></select>
+          <button id="reset-button" class="ghost-button" type="button">重置</button>
+        </div>
+      </div>
+      <div id="blank-fields" class="blank-fields"></div>
+      <details class="preview" open>
+        <summary>完整 JML 预览</summary>
+        <textarea id="submission" spellcheck="false" readonly aria-label="完整 JML 预览"></textarea>
+      </details>
+      <div class="action-row">
+        <label>反馈深度
+          <select id="mode"><option value="hint">Hint · 引导</option><option value="review">Review · 详审</option><option value="solution">Solution · 教师</option></select>
+        </label>
+        <button id="submit-button" class="primary-button" type="button">提交审查 <span>→</span></button>
+      </div>
+    </section>
+
+    <section class="panel feedback-panel">
+      <div class="panel-heading"><span class="eyebrow">03 · REFLECT</span><h2>Agent 反馈</h2></div>
+      <div id="empty-feedback" class="empty-state"><div class="orbit">?</div><p>填写后提交。Agent 会先检查结构，再分析语义与异常优先级。</p></div>
+      <div id="checking" class="checking hidden"><span></span><span></span><span></span><p>正在核对需求、接口与规格…</p></div>
+      <div id="feedback-content" class="feedback-content hidden"></div>
+      <div id="history" class="history"></div>
+    </section>
+  </main>
+  <script src="/app.js" defer></script>
+</body>
+</html>

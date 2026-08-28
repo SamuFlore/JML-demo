@@ -1,0 +1,51 @@
+method: followUser
+behavior_type: mutation
+parameters:
+  - id1
+  - id2
+entities_read:
+  - Network users
+  - id1 user's following relation
+  - id2 user's followers relation
+normal_conditions:
+  - user id1 exists
+  - user id2 exists
+  - id1 is different from id2
+  - id1 does not currently follow id2
+derived_values: []
+state_changes:
+  - establish the relation that id1 follows id2
+  - establish the inverse representation that id2 contains id1 as a follower
+conditional_state_changes: []
+unchanged_state:
+  - all user identity, name, and age fields
+  - all received-video state
+  - all videos
+  - all unrelated following and follower relations
+return_constraints:
+  - method returns void
+  - successful execution outputs follow_user succeeded
+exceptions:
+  - name: UserIdNotFoundException
+    condition: id1 does not exist
+    priority: 1
+  - name: UserIdNotFoundException
+    condition: id1 exists and id2 does not exist
+    priority: 2
+  - name: SelfSubscriptionException
+    condition: both users exist and id1 equals id2
+    priority: 3
+  - name: DuplicateSubscriptionException
+    condition: both users exist, IDs differ, and id1 already follows id2
+    priority: 4
+atomicity_requirements:
+  - every exceptional branch preserves all business state
+  - the two relation representations change together on success
+ordering: []
+scope_constraints:
+  - following is directed from id1 to id2
+  - follower representation is the inverse direction on id2
+missing_information: []
+ambiguities: []
+unsupported_assumptions: []
+
