@@ -1,0 +1,39 @@
+{
+  "id": "hw9-follow-user-jml-fill",
+  "title": "用 JML 描述双向关注关系",
+  "method": "followUser",
+  "allowed_modes": ["hint", "review"],
+  "default_mode": "hint",
+  "feedback_contract": {
+    "hint": {
+      "level": "guided",
+      "reveals": ["one highest-priority category", "one direct repair direction"],
+      "never_reveals": ["replacement clause", "reference JML", "state snapshot", "hidden mutations"]
+    },
+    "review": {
+      "level": "detailed",
+      "reveals": ["blank location", "category", "abstract counterexample shape", "repair direction"],
+      "never_reveals": ["replacement clause", "reference JML", "complete state", "hidden mutations"]
+    }
+  },
+  "samples": [
+    {"id": "missing-normal", "label": "错误：正常条件遗漏", "file": "samples/missing-normal-condition.java"},
+    {"id": "wrong-direction", "label": "错误：关系方向颠倒", "file": "samples/wrong-relation-direction.java"},
+    {"id": "overlap-exception", "label": "错误：异常条件重叠", "file": "samples/overlapping-exceptions.java"},
+    {"id": "hallucinated-symbol", "label": "错误：使用不存在接口", "file": "samples/hallucinated-symbol.java"},
+    {"id": "unfinished", "label": "错误：仍有空格", "file": "samples/incomplete.java"}
+  ],
+  "placeholders": [
+    "NORMAL_CONDITION",
+    "FORWARD_POSTCONDITION",
+    "INVERSE_POSTCONDITION",
+    "FIRST_USER_MISSING",
+    "SECOND_USER_MISSING",
+    "SELF_FOLLOW",
+    "DUPLICATE_FOLLOW"
+  ],
+  "allowed_symbols": [
+    "containsUser", "getUser", "isFollowing", "containsFollower", "users",
+    "UserIdNotFoundException", "SelfSubscriptionException", "DuplicateSubscriptionException"
+  ]
+}

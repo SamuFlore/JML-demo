@@ -1,0 +1,19 @@
+public interface NetworkInterface {
+    /*@ public normal_behavior
+      @ requires {{NORMAL_CONDITION}};
+      @ assignable users[*];
+      @ ensures {{FORWARD_POSTCONDITION}};
+      @ ensures {{INVERSE_POSTCONDITION}};
+      @ ensures (* output-> "follow_user succeeded" *);
+      @ also
+      @ public exceptional_behavior
+      @ assignable \nothing;
+      @ signals (UserIdNotFoundException e) {{FIRST_USER_MISSING}};
+      @ signals (UserIdNotFoundException e) {{SECOND_USER_MISSING}};
+      @ signals (SelfSubscriptionException e) {{SELF_FOLLOW}};
+      @ signals (DuplicateSubscriptionException e) {{DUPLICATE_FOLLOW}};
+      @*/
+    public /*@ safe @*/ void followUser(int id1, int id2)
+        throws UserIdNotFoundException, SelfSubscriptionException,
+               DuplicateSubscriptionException;
+}
