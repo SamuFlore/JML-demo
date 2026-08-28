@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "method": "NetworkInterface.followUser",
+  "status": "teacher_approved",
+  "source_authority": "The complete JML block immediately before followUser in the staff official NetworkInterface.java.",
+  "student_owned_blanks": [
+    {
+      "id": "NORMAL_CONDITION",
+      "source_jml_selector": {"clause": "requires", "occurrence": 1},
+      "replacement_scope": "condition_only",
+      "ability": "combine normal preconditions and exclude every exceptional case"
+    },
+    {
+      "id": "FORWARD_POSTCONDITION",
+      "source_jml_selector": {"clause": "ensures", "occurrence": 1},
+      "replacement_scope": "condition_only",
+      "ability": "state the forward directed relation after success"
+    },
+    {
+      "id": "INVERSE_POSTCONDITION",
+      "source_jml_selector": {"clause": "ensures", "occurrence": 2},
+      "replacement_scope": "condition_only",
+      "ability": "state the inverse follower representation after success"
+    },
+    {
+      "id": "FIRST_USER_MISSING",
+      "source_jml_selector": {"clause": "signals", "occurrence": 1, "exception": "UserIdNotFoundException"},
+      "replacement_scope": "condition_only",
+      "ability": "encode the first exception case and its priority"
+    },
+    {
+      "id": "SECOND_USER_MISSING",
+      "source_jml_selector": {"clause": "signals", "occurrence": 2, "exception": "UserIdNotFoundException"},
+      "replacement_scope": "condition_only",
+      "ability": "make an exception branch disjoint from earlier branches"
+    },
+    {
+      "id": "SELF_FOLLOW",
+      "source_jml_selector": {"clause": "signals", "occurrence": 3, "exception": "SelfSubscriptionException"},
+      "replacement_scope": "condition_only",
+      "ability": "express a later exception branch with all prerequisite guards"
+    },
+    {
+      "id": "DUPLICATE_FOLLOW",
+      "source_jml_selector": {"clause": "signals", "occurrence": 4, "exception": "DuplicateSubscriptionException"},
+      "replacement_scope": "condition_only",
+      "ability": "express duplicate-relation detection with precedence guards"
+    }
+  ],
+  "locked_elements": [
+    "Java method signature and throws list",
+    "normal/exceptional behaviour headers",
+    "assignable clauses",
+    "success output postcondition",
+    "exception classes and clause order"
+  ]
+}

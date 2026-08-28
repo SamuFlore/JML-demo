@@ -1,0 +1,5 @@
+{
+  "interface_relative_dir": "面向对象第三单元第一次作业官方包/com/oocourse/spec3/main",
+  "interface_files": ["UserInterface.java", "VideoInterface.java", "NetworkInterface.java"],
+  "notes": "The released official interface and guide are authoritative."
+}

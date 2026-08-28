@@ -1,0 +1,16 @@
+{
+  "teaching_goals": [
+    "translate natural-language success conditions into one normal requires clause",
+    "express both observable directions of a bidirectional relation",
+    "encode exception priority with mutually exclusive signals conditions",
+    "recognize that exceptional behavior is atomic"
+  ],
+  "criteria": [
+    {"id": "normal-conditions", "severity": "major"},
+    {"id": "forward-relation", "severity": "major"},
+    {"id": "inverse-relation", "severity": "major"},
+    {"id": "exception-priority", "severity": "major"},
+    {"id": "interface-grounding", "severity": "critical"}
+  ],
+  "release": "teacher_only"
+}
